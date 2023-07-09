@@ -11,7 +11,6 @@ import numpy as np
 from users import *
 import struct
 import sys
-
 import cv2
 
 
@@ -335,13 +334,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             widget.setFont(font)
             self.textBrowser_message.append(f'设置消息框字体为:'
                                             f'{widget.font().family(), widget.font().pointSize(), "Bold" if widget.font().bold() else ""}')
-    def SetFnts(self, widget):
-        font, ok = QFontDialog.getFont()
-        if ok:
-            for widget_ in widget.findChildren():
-                widget_.setFont(font)
-            self.textBrowser_message.append(f'设置面板字体为:'
-                                            f'{widget.font().family(), widget.font().pointSize(), "Bold" if widget.font().bold() else ""}')
 
     def ShowAbout(self):
         about_text = """
@@ -356,7 +348,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 <h2>智能车调度软件 v1.0</h2>
                 <p>参赛队伍: 风驰电掣</p>
                 <p>所属学校: 华北电力大学(保定)</p>
-                <p>要了解更多信息，请访问<a href="https://github.com/zhengyinloong">https://github.com/zhengyinloong</a></p>
+                <p>要了解更多信息，请访问<a href="https://github.com/zhengyinloong/qingzhou_shangweiji">https://github.com/zhengyinloong</a></p>
             </body>
         </html>
         """
@@ -370,7 +362,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         # QCoreApplication.quit()
         QCoreApplication.exit(0)
-
 
 
 if __name__ == '__main__':
