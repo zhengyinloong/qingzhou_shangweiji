@@ -3,7 +3,7 @@
 # zhengyinloong
 # 2023/06/30 17:42
 
-from PyQt5.QtCore import QTimer, QCoreApplication
+from PyQt5.QtCore import QTimer, QCoreApplication, Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFontDialog, QMessageBox
 from PyQt5.QtGui import QPixmap, QImage
 from socket import *
@@ -66,15 +66,16 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.carLinearV = ''
         self.carStatus = '未连接'
 
-        self.gwX = '4.5'
-        self.gwY = '5.6'
-        self.grX = ''
-        self.grY = ''
-        self.guX = ''
-        self.guY = ''
+        self.gwX = '0.70'
+        self.gwY = '2.55'
+        self.grX = '4.02'
+        self.grY = '4.74'
+        self.guX = '6.40'
+        self.guY = '0.42'
 
         self.font = QtGui.QFont()
-        self.font.setFamily("幼圆")
+        self.font.setFamily("等线 Light")
+        self.font.setPointSize(10)
 
         # 显示
         self.lineEdit_serverIP.setText(self.serverIP)
@@ -244,12 +245,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             header, length = struct.unpack('!4sI', self.recved)
             start_flag = b'\x02\x20\x02\x20'
-            self.textBrowser_message.append(f'客户接收到消息头{header, length}')
+            # self.textBrowser_message.append(f'客户接收到消息头{header, length}')
+            self.statusbar.showMessage(f'客户接收到消息头{header, length}')
             if header == start_flag:
                 self.recved = recvall(self.dataSocket, length)
                 self.recvedMsgLength = len(self.recved)
                 if self.recvedMsgLength == length:
-                    self.statusbar.showMessage(f'{self.recvedMsgLength, len(self.recved)}')
+                    # self.statusbar.showMessage(f'{self.recvedMsgLength, len(self.recved)}')
                     self.ParsingMessage()
 
         except Exception as e:
@@ -273,7 +275,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 self.camera_img = QPixmap.fromImage(camera_img)
 
                 self.ShowCamera()
-                self.textBrowser_message.append(f'客户接收到img{img2.shape}')  # {self.recved.decode()}
+                # self.textBrowser_message.append(f'客户端接收到img{img2.shape}')  # {self.recved.decode()}
+                self.statusbar.showMessage(f'客户端接收到img{img2.shape}')  # {self.recved.decode()}
                 # # 解决同步问题
                 # self.toSend = 'get camera'
                 # self.SendMessage()
@@ -284,16 +287,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 self.carInfo = str0
                 self.carInfoList = self.carInfo.split(' ')
                 self.Show_carInfo()
-                self.textBrowser_message.append(
-                    f'客户端接收到小车状态{self.carInfo}')  # {self.recved.decode()}
+                # self.textBrowser_message.append(f'客户端接收到小车状态{self.carInfo}')  # {self.recved.decode()}
+                self.statusbar.showMessage(f'客户端接收到小车状态{self.carInfo}')  # {self.recved.decode()}
                 # except Exception as e:
                 #     self.textBrowser_message.append(f'解析失败:{str(e)}')
         except Exception as e:
             self.textBrowser_message.append(f'解析失败:{str(e)}')
-
-    def demo(self):
-
-        pass
 
     def Show_carInfo(self):
         self.carX = self.carInfoList[0][:4]
@@ -302,13 +301,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.carAngularV = self.carInfoList[3][:4]
         self.carLinearV = self.carInfoList[4][:4]
         self.carStatus = self.carInfoList[5]
-        M = {'0': '好的',
-             '1': '停车点',
-             '2': 'enen',
-             '3': 'enen',
-             '4': 'enen',
-             '5': 'enen',
-             '6': 'OK'
+        M = {'1': '初始化',
+             '2': '前往装货',
+             '3': '红绿灯',
+             '4': '坡路',
+             '5': '前往卸货',
+             '6': '避障',
+             '7': 'S路',
+             '8': '倒车',
+             '9': '前往初始区'
              }
 
         self.lineEdit_carX.setText(self.carX)
@@ -358,14 +359,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def QuitApp(self):
         # self.Timer.Stop()
         # ============ ADD ===========
-        # self.textBrowser_message.append('Exiting the application..')
+        self.textBrowser_message.append('Exiting the application..')
 
         # QCoreApplication.quit()
         QCoreApplication.exit(0)
 
 
 if __name__ == '__main__':
-    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)  # 设置其窗口尺寸显示正常
+    QtCore.QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling)  # 设置其窗口尺寸显示正常
     app = QApplication(sys.argv)
     # app.setStyle('fusion')  # 设置 fusion 风格
     # app.setStyle('windows')  # 设置 windows 风格
