@@ -67,10 +67,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.carStatus = '未连接'
 
         self.gwX = '0.70'
-        self.gwY = '2.20'
-        self.grX = '3.60'
+        self.gwY = '2.35'
+        self.grX = '3.75'
         self.grY = '4.74'
-        self.guX = '7.15'
+        self.guX = '7.05'
         self.guY = '0.42'
 
         self.font = QtGui.QFont()
