@@ -52,7 +52,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         :return:
         """
         # 参数
-        self.serverIP = '192.168.79.219'
+        self.serverIP = '192.168.217.219'
         self.serverPort = '1500'
 
         self.clientIP = ''
@@ -67,10 +67,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.carStatus = '未连接'
 
         self.gwX = '0.70'
-        self.gwY = '2.55'
-        self.grX = '4.02'
+        self.gwY = '2.20'
+        self.grX = '3.60'
         self.grY = '4.74'
-        self.guX = '6.40'
+        self.guX = '7.15'
         self.guY = '0.42'
 
         self.font = QtGui.QFont()
@@ -105,6 +105,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         """
         self.pushButton_closeserver.setEnabled(False)
         self.SetWidgetsEnable(False)
+        self.lineEdit_gwY.setStyleSheet("color:red")
+        self.lineEdit_grX.setStyleSheet("color:red")
+        self.lineEdit_guX.setStyleSheet("color:red")
 
     def SetWidgetsEnable(self, isEnable):
         """
@@ -219,21 +222,23 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
             self.textBrowser_message.append(f'客户端:{self.toSend}')
         elif cmd == 0x04:
-            self.toSend = '3'
+            # self.toSend = '3'
+            self.gwY = self.lineEdit_gwY.text()
+            self.toSend = self.lineEdit_gwY.text()
             self.SendMessage()
-
-            self.textBrowser_message.append(f'客户端:等待区')
+            self.textBrowser_message.append(f'客户端:等待区{self.toSend}')
         elif cmd == 0x05:
-            self.toSend = '1'
+            # self.toSend = '1'
+            self.grX = self.lineEdit_grX.text()
+            self.toSend = self.lineEdit_grX.text()
             self.SendMessage()
-
-            self.textBrowser_message.append(f'客户端:装货区')
+            self.textBrowser_message.append(f'客户端:装货区{self.toSend}')
         elif cmd == 0x06:
-            self.toSend = '2'
+            # self.toSend = '2'
+            self.guX = self.lineEdit_guX.text()
+            self.toSend = self.lineEdit_guX.text()
             self.SendMessage()
-
-            self.textBrowser_message.append(f'客户端:卸货区')
-
+            self.textBrowser_message.append(f'客户端:卸货区{self.toSend}')
     def SendMessage(self):
         self.dataSocket.send(self.toSend.encode())
 
@@ -318,6 +323,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.lineEdit_carAngularV.setText(self.carAngularV)
         self.lineEdit_carLinearV.setText(self.carLinearV)
         self.lineEdit_carStatus.setText(M[self.carStatus])
+        # self.textBrowser_message.append(self.carStatus)
 
     def ShowCamera(self):
         # 在 label 中显示
